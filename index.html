@@ -3,23 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaveSphere | Enterprise Command</title>
+    <title>SaveSphere | Live Market Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div id="app-shell">
-        <aside id="sidebar">
-            <div class="brand">SaveSphere Pro</div>
-            <nav>
-                <button onclick="renderView('dashboard')">Analytics</button>
-                <button onclick="renderView('procurement')">Procurement</button>
-                <button onclick="renderView('settings')">System Config</button>
+    <div class="app-layout">
+        
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-box">S</div>
+                <h2>SaveSphere Pro</h2>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" onclick="switchTab('dashboard')">Live Dashboard</button>
+                <button class="nav-btn" onclick="switchTab('market')">Market Matrix</button>
+                <button class="nav-btn" onclick="switchTab('network')">Node Network</button>
             </nav>
+            <div class="system-status">
+                <div class="pulse-dot"></div>
+                <span>System: <strong id="status-text">OPTIMAL</strong></span>
+            </div>
         </aside>
 
-        <main id="content-viewport">
-            <div id="view-mount"></div>
+        <main class="workspace">
+            <header class="top-bar">
+                <h1 id="page-title">Live Dashboard</h1>
+                <div class="user-controls">
+                    <button class="action-btn" onclick="forceSync()">Force Node Sync</button>
+                    <div class="profile-badge">Admin Access</div>
+                </div>
+            </header>
+
+            <div id="view-dashboard" class="view-panel active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>Projected Monthly Yield</h3>
+                        <div class="metric-value" id="val-yield">$0.00</div>
+                        <div class="metric-sub text-green" id="val-yield-sub">+0.00% from last hour</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Active Data Nodes</h3>
+                        <div class="metric-value" id="val-nodes">0</div>
+                        <div class="metric-sub">Scanning local grocery hubs</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Algorithm Efficiency</h3>
+                        <div class="metric-value" id="val-efficiency">0.0%</div>
+                        <div class="metric-sub text-green">Peak optimization reached</div>
+                    </div>
+                </div>
+
+                <div class="chart-container card">
+                    <div class="card-header">
+                        <h2>Live Price Fluctuation (Sydney Metro)</h2>
+                        <span class="live-tag">LIVE UPDATES</span>
+                    </div>
+                    <canvas id="liveChart" height="80"></canvas>
+                </div>
+            </div>
+
+            <div id="view-market" class="view-panel">
+                <div class="card">
+                    <h2>Live Procurement Matrix</h2>
+                    <p>Simulating real-time data from localized grocery nodes.</p>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Commodity ID</th>
+                                    <th>Supplier Node</th>
+                                    <th>Current Rate</th>
+                                    <th>Volatility</th>
+                                </tr>
+                            </thead>
+                            <tbody id="market-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-network" class="view-panel">
+                <div class="card terminal-card">
+                    <h2>Node Connection Terminal</h2>
+                    <div class="terminal-window" id="terminal-output">
+                        > Initiating secure handshake with local supply nodes...<br>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
     <script src="script.js"></script>
