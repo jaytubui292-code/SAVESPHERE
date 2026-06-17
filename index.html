@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaveSphere Enterprise</title>
+    <title>SaveSphere | Enterprise Command</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <h1>SaveSphere Enterprise</h1>
-            <p>Financial Intelligence Dashboard</p>
-        </header>
-        <main>
-            <div class="card">
-                <h3>Market Analysis</h3>
-                <button id="scan-btn">Initiate Node Scan</button>
-                <div id="status-output">System Ready</div>
-            </div>
+    <div id="app-shell">
+        <aside id="sidebar">
+            <div class="brand">SaveSphere Pro</div>
+            <nav>
+                <button onclick="renderView('dashboard')">Analytics</button>
+                <button onclick="renderView('procurement')">Procurement</button>
+                <button onclick="renderView('settings')">System Config</button>
+            </nav>
+        </aside>
+
+        <main id="content-viewport">
+            <div id="view-mount"></div>
         </main>
     </div>
     <script src="script.js"></script>
