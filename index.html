@@ -3,341 +3,472 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaveSphere | Smarter Groceries & Dining</title>
+    <title>SaveSphere | Smart Savings Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="onboarding-overlay" class="overlay">
-        <div class="modal-card">
-            
-            <div id="step-1" class="wizard-step active">
+    <div id="auth-gate-canvas" class="auth-overlay active">
+        <div id="auth-card-login" class="auth-card-box grid-split">
+            <div class="auth-form-side">
                 <div class="brand-header">
-                    <div class="app-logo"></div>
-                    <h1>SaveSphere</h1>
-                    <p>Save smarter on groceries & dining</p>
-                </div>
-                <div class="auth-buttons">
-                    <button class="btn btn-primary" onclick="nextStep(2)">Continue with Email</button>
-                    <button class="btn btn-outline" onclick="nextStep(2)">Continue with Google</button>
-                    <button class="btn btn-dark" onclick="nextStep(2)">Continue with Apple</button>
-                </div>
-            </div>
-
-            <div id="step-2" class="wizard-step">
-                <div class="step-progress"><span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span></div>
-                <h2>Where do you shop?</h2>
-                <p class="subtitle">Select the stores you shop at most often.</p>
-                <div class="checkbox-group">
-                    <label class="checkbox-tile"><input type="checkbox" checked value="Coles"> <span>Coles</span></label>
-                    <label class="checkbox-tile"><input type="checkbox" checked value="Woolworths"> <span>Woolworths</span></label>
-                    <label class="checkbox-tile"><input type="checkbox" checked value="Aldi"> <span>Aldi</span></label>
-                    <label class="checkbox-tile"><input type="checkbox" value="IGA"> <span>IGA</span></label>
-                    <label class="checkbox-tile"><input type="checkbox" value="Other"> <span>Other / Local Stores</span></label>
-                </div>
-                <button class="btn btn-primary w-100" onclick="nextStep(3)">Continue</button>
-            </div>
-
-            <div id="step-3" class="wizard-step">
-                <div class="step-progress"><span class="step-dot active"></span><span class="step-dot active"></span><span class="step-dot"></span></div>
-                <h2>Tell us your preferences</h2>
-                <p class="subtitle">This helps us personalize deals and recommendations.</p>
-                
-                <div class="form-element">
-                    <label>Dietary Preference</label>
-                    <select id="pref-diet">
-                        <option value="none">No Preference</option>
-                        <option value="vegetarian">Vegetarian</option>
-                        <option value="halal">Halal</option>
-                        <option value="low-sugar">Low Sugar</option>
-                    </select>
+                    <div class="logo-mark-original"></div>
+                    <h2>Welcome Back!</h2>
+                    <p class="text-muted">Sign in to continue your savings journey</p>
                 </div>
                 
-                <div class="form-element">
-                    <label>Favourite Cuisines</label>
-                    <div class="tag-selector">
-                        <span class="tag active" onclick="toggleTag(this)">Italian</span>
-                        <span class="tag active" onclick="toggleTag(this)">Asian</span>
-                        <span class="tag active" onclick="toggleTag(this)">Healthy</span>
-                        <span class="tag" onclick="toggleTag(this)">Fast Food</span>
+                <form id="form-login">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="login-email" placeholder="Enter your email" required value="emma.j@gmail.com">
                     </div>
-                </div>
-
-                <div class="form-element">
-                    <label>Allergies or Intolerances</label>
-                    <select id="pref-allergy">
-                        <option value="none">None</option>
-                        <option value="gluten">Gluten Free</option>
-                        <option value="dairy">Dairy Free</option>
-                        <option value="nuts">Nut Free</option>
-                    </select>
-                </div>
-                <button class="btn btn-primary w-100" onclick="nextStep(4)">Continue</button>
-            </div>
-
-            <div id="step-4" class="wizard-step">
-                <div class="step-progress"><span class="step-dot active"></span><span class="step-dot active"></span><span class="step-dot active"></span></div>
-                <h2>Set your budget</h2>
-                <p class="subtitle">We'll help you save within your weekly budget.</p>
-                
-                <div class="budget-display">
-                    <label>Weekly Budget</label>
-                    <div class="budget-amount" id="budget-val">$150</div>
-                    <input type="range" id="budget-slider" min="50" max="500" value="150" step="10" oninput="updateBudgetVal(this.value)">
-                    <div class="range-labels"><span>$50</span><span>$500+</span></div>
-                </div>
-
-                <div class="family-counter">
-                    <label>Family Size</label>
-                    <div class="counter-control">
-                        <button onclick="updateFamily(-1)">-</button>
-                        <span id="family-val">4 People</span>
-                        <button onclick="updateFamily(1)">+</button>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required value="••••••••">
                     </div>
-                </div>
-                <button class="btn btn-primary w-100" onclick="closeOnboarding()">Get Started</button>
-            </div>
+                    <div class="auth-options-row">
+                        <label class="check-container"><input type="checkbox" checked> Remember me</label>
+                        <button type="button" class="link-btn" id="btn-forgot-pass">Forgot password?</button>
+                    </div>
+                    <button type="submit" class="action-btn wide-btn">Sign In</button>
+                </form>
 
+                <div class="divider-text"><span>or continue with</span></div>
+
+                <div class="oauth-row">
+                    <button class="oauth-btn" id="btn-oauth-google">🌐 Google</button>
+                    <button class="oauth-btn" id="btn-oauth-apple">🍏 Apple</button>
+                </div>
+
+                <div class="divider-text"><span>or explore instantly</span></div>
+                <button class="action-btn secondary-btn wide-btn" id="btn-guest-login">👤 Continue as Guest</button>
+
+                <p class="switch-auth-mode">Don't have an account? <span id="to-register-view">Sign up</span></p>
+            </div>
+            <div class="auth-visual-side">
+                <div class="logo-mark-giant"></div>
+                <h3>SaveSphere</h3>
+                <p>Spend less. Plan better. Live smarter.</p>
+            </div>
+        </div>
+
+        <div id="auth-card-register" class="auth-card-box grid-split hidden">
+            <div class="auth-form-side">
+                <div class="brand-header">
+                    <div class="logo-mark-original"></div>
+                    <h2>Create Account</h2>
+                    <p class="text-muted">Sign up to get started</p>
+                </div>
+                
+                <form id="form-register">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" id="reg-name" placeholder="Enter full name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="reg-email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="reg-password" placeholder="Create a password" required>
+                    </div>
+                    <label class="check-container terms-check">
+                        <input type="checkbox" required> I agree to the Terms of Service & Privacy Policy
+                    </label>
+                    <button type="submit" class="action-btn wide-btn">Sign Up</button>
+                </form>
+
+                <p class="switch-auth-mode" style="margin-top: 1.5rem;">Already have an account? <span id="to-login-view">Sign in</span></p>
+            </div>
+            <div class="auth-visual-side">
+                <div class="logo-mark-giant"></div>
+                <h3>SaveSphere</h3>
+                <p>Join thousands optimizing their daily budgets seamlessly.</p>
+            </div>
         </div>
     </div>
 
-    <div class="app-layout">
-        
-        <header class="navbar">
-            <div class="nav-left">
-                <div class="app-logo mini"></div>
-                <span class="brand-name">SaveSphere</span>
+
+    <div id="app-workspace-shell" class="app-container app-locked">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-mark-original"></div>
+                <h2>SaveSphere</h2>
             </div>
-            <div class="nav-right">
-                <div id="alert-banner" class="smart-alert-ticker" onclick="triggerAlertModal()">
-                    <span class="alert-icon">⚡</span> <span id="alert-text">Analyzing deals...</span>
-                </div>
-                <div class="user-badge" onclick="switchView('profile')">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="User Profile" class="avatar-img">
-                    <span id="user-name-display">Emma Johnson</span>
-                </div>
-            </div>
-        </header>
+            
+            <nav class="nav-links">
+                <button class="nav-item active" id="btn-nav-dashboard"><span class="icon">🏠</span> Dashboard</button>
+                <button class="nav-item" id="btn-nav-groceries"><span class="icon">🛒</span> Groceries</button>
+                <button class="nav-item" id="btn-nav-dining"><span class="icon">🍔</span> Dining</button>
+                <button class="nav-item" id="btn-nav-planner"><span class="icon">📅</span> Meal Planner</button>
+                <button class="nav-item" id="btn-nav-tracker"><span class="icon">📊</span> Budget Tracker</button>
+                <button class="nav-item" id="btn-nav-reviews"><span class="icon">⭐</span> Reviews</button>
+                <button class="nav-item" id="btn-nav-profile"><span class="icon">👤</span> Profile</button>
+                <button class="nav-item" id="btn-nav-settings"><span class="icon">⚙️</span> Settings</button>
+            </nav>
 
-        <main class="main-content">
+            <button class="logout-btn" id="btn-logout">Logout Securely 📤</button>
+        </aside>
 
-            <section id="view-home" class="view-panel active">
-                <div class="dashboard-hero">
-                    <div class="hero-left">
-                        <h1>Hi, <span class="profile-name">Emma</span> 👋</h1>
-                        <p class="date-stamp">Here is your savings snapshot for this week</p>
-                    </div>
-                    <div class="savings-card">
-                        <span class="card-label">Tracked Month Savings</span>
-                        <h2 id="home-savings-total">$78.45</h2>
-                        <div class="progress-bar-container"><div class="progress-fill" style="width: 72%"></div></div>
+        <main class="main-viewport">
+            <header class="view-header">
+                <div class="search-bar-container">
+                    <input type="text" placeholder="Search for items, brands, recipes..." id="global-search">
+                </div>
+                <div class="header-right">
+                    <span class="notification-bell" id="btn-bell">🔔</span>
+                    <div class="user-pill" id="btn-header-profile">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" alt="Avatar" class="user-avatar" id="global-header-avatar">
                     </div>
                 </div>
+            </header>
 
-                <h3 class="section-title">Top Deals For You</h3>
-                <div class="deals-grid" id="top-deals-container">
-                    </div>
+            <section id="view-dashboard" class="page-view active">
+                <div class="welcome-row">
+                    <h2 id="dashboard-welcome-banner">Welcome back, Emma! 👋</h2>
+                </div>
                 
-                <h3 class="section-title" style="margin-top: 2.5rem;">Quick Actions</h3>
-                <div class="quick-actions-row">
-                    <div class="action-card" onclick="switchView('groceries')">🛒 Compare Groceries</div>
-                    <div class="action-card" onclick="switchView('dining')">🍔 Dining Hub</div>
-                    <div class="action-card" onclick="switchView('planner')">📅 Meal Planner</div>
+                <div class="top-stats-grid">
+                    <div class="stat-card green-card">
+                        <span class="stat-label">Estimated Weekly Savings</span>
+                        <h1 id="dash-weekly-savings">$78.45</h1>
+                        <span class="stat-sub text-green">↑ 11% from last week</span>
+                    </div>
+                    <div class="stat-card border-card">
+                        <span class="stat-label">Budget Overview</span>
+                        <h1 id="dash-budget-text">$320.00</h1>
+                        <p class="stat-sub">of $500 budget used</p>
+                        <div class="progress-track"><div class="progress-thumb" id="dash-budget-progress" style="width: 64%"></div></div>
+                    </div>
+                    <div class="stat-card border-card">
+                        <span class="stat-label">Meals Planned</span>
+                        <h1 id="dash-meals-count">21</h1>
+                        <span class="stat-sub">this week</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-split-layout">
+                    <div class="card-box">
+                        <div class="box-header">
+                            <h3>Top Deals For You</h3>
+                            <span class="see-all" id="btn-dash-see-all-deals">See all</span>
+                        </div>
+                        <div class="brands-deals-row">
+                            <div class="brand-badge-card deal-trigger-btn" data-store="Coles"><div class="brand-logo-sim custom-coles"></div><strong>$6.50 off</strong><p>Fresh Produce</p></div>
+                            <div class="brand-badge-card deal-trigger-btn" data-store="Woolworths"><div class="brand-logo-sim custom-woolies"></div><strong>$10 off</strong><p>Selected items</p></div>
+                            <div class="brand-badge-card deal-trigger-btn" data-store="Aldi"><div class="brand-logo-sim custom-aldi"></div><strong>15% off</strong><p>Pantry Staples</p></div>
+                            <div class="brand-badge-card deal-trigger-btn" data-store="KFC"><div class="brand-logo-sim custom-kfc"></div><strong>$5.00 off</strong><p>Dinner Deals</p></div>
+                        </div>
+                        <div class="banner-pitch">
+                            <div>
+                                <h4>Spend less. Plan better. Live smarter.</h4>
+                                <p>SaveSphere helps you make smarter choices every day.</p>
+                            </div>
+                            <div class="banner-graphics">🛒</div>
+                        </div>
+                    </div>
+
+                    <div class="card-box">
+                        <h3>Quick Actions</h3>
+                        <ul class="quick-actions-list">
+                            <li id="qa-shopping-list"><span>📝 Smart Shopping List</span> <span class="arr">❯</span></li>
+                            <li id="qa-meal-planner"><span>🥗 Meal Planner</span> <span class="arr">❯</span></li>
+                            <li id="qa-budget-tracker"><span>📈 Budget Tracker</span> <span class="arr">❯</span></li>
+                            <li id="qa-local-gems"><span>📍 Local Gems</span> <span class="arr">❯</span></li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
-            <section id="view-groceries" class="view-panel">
-                <div class="view-header">
-                    <h2>Smart Grocery Catalog</h2>
-                    <p>Real-time item price comparison engine across local nodes.</p>
+            <section id="view-groceries" class="page-view">
+                <div class="title-block">
+                    <h2>Groceries</h2>
+                    <p>Compare prices and save more</p>
                 </div>
-                <div class="grocery-workspace">
-                    <div class="shopping-list-builder card">
-                        <h3>Smart Shopping List</h3>
-                        <div class="input-row">
-                            <input type="text" id="grocery-item-input" placeholder="Type an item (e.g., Milk, Bread, Chicken)...">
-                            <button class="btn btn-primary" onclick="addGroceryListItem()">Add</button>
-                        </div>
-                        <ul class="list-group" id="shopping-list-items">
-                            </ul>
-                        <div class="list-summary-footer">
-                            <div class="total-row"><span>Estimated Total:</span><strong id="list-total-cost">$0.00</strong></div>
-                            <button class="btn btn-outline w-100" style="margin-top: 1rem;" onclick="optimizeShoppingList()">Optimize Store Routes</button>
+
+                <div class="store-filter-chips" id="store-filter-container">
+                    <span class="chip active" data-store="all">All Stores</span>
+                    <span class="chip" data-store="coles">Coles</span>
+                    <span class="chip" data-store="woolworths">Woolworths</span>
+                    <span class="chip" data-store="aldi">Aldi</span>
+                    <span class="chip" data-store="iga">IGA</span>
+                </div>
+
+                <div class="grocery-columns">
+                    <div class="card-box">
+                        <h3>Your Shopping List</h3>
+                        <form id="form-add-grocery-item" class="list-input-wrapper">
+                            <input type="text" placeholder="Add custom item..." id="list-input-node" required>
+                            <button type="submit" class="action-btn">Add</button>
+                        </form>
+                        <div class="shopping-list-scrollable" id="shopping-list-mount"></div>
+                        <div class="list-summary-panel">
+                            <div class="summary-line"><span>Estimated Total</span><strong id="grocery-total-cost">$0.00</strong></div>
+                            <div class="optimal-banner" id="optimal-store-banner">ALDI is cheapest for your current list</div>
                         </div>
                     </div>
 
-                    <div class="catalog-display card">
-                        <h3>Live Price Matrix</h3>
+                    <div class="card-box">
+                        <h3>Compare Prices</h3>
                         <div class="table-responsive">
-                            <table class="matrix-table">
-                               <thead>
-                                   <tr>
-                                       <th>Product Standard</th>
-                                       <th>Coles</th>
-                                       <th>Woolworths</th>
-                                       <th>Aldi</th>
-                                       <th>Best Option</th>
-                                   </tr>
-                               </thead>
-                               <tbody id="grocery-matrix-body">
-                                   </tbody>
+                            <table class="comparison-matrix">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Coles</th>
+                                        <th>Woolworths</th>
+                                        <th>Aldi</th>
+                                        <th>IGA</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="price-matrix-mount"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="view-dining" class="view-panel">
-                <div class="view-header">
-                    <h2>Dining & Takeaway Deals</h2>
-                    <p>Localized premium restaurant discounts mapped to your culinary profiles.</p>
+            <section id="view-dining" class="page-view">
+                <div class="title-block">
+                    <h2>Dining</h2>
+                    <p>Discover deals and local gems</p>
                 </div>
-                <div class="dining-workspace">
-                    <div class="dining-list card">
-                        <h3>Popular Dining Nodes</h3>
-                        <div class="restaurant-deck" id="restaurant-cards-container">
-                            </div>
+                
+                <h3>Top Restaurant Deals</h3>
+                <div class="dining-deals-grid">
+                    <div class="restaurant-card dynamic-deal-card" data-restaurant="Pizza Palace">
+                        <div class="img-frame" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80')"></div>
+                        <div class="rest-details">
+                            <h4>Pizza Palace</h4>
+                            <p>Italian • 0.8 km • ⭐ 4.6</p>
+                            <span class="badge red">20% off orders over $25</span>
+                        </div>
                     </div>
-                    
-                    <div class="dining-detail-pane card" id="restaurant-detail-view">
-                        <div class="empty-state-notice">Select a restaurant node to inspect specific details, location tracking and reviews.</div>
+                    <div class="restaurant-card dynamic-deal-card" data-restaurant="Sushi Hub">
+                        <div class="img-frame" style="background-image: url('https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=400&q=80')"></div>
+                        <div class="rest-details">
+                            <h4>Sushi Hub</h4>
+                            <p>Japanese • 1.2 km • ⭐ 4.7</p>
+                            <span class="badge green">15% off all sushi</span>
+                        </div>
+                    </div>
+                    <div class="restaurant-card dynamic-deal-card" data-restaurant="Burger Town">
+                        <div class="img-frame" style="background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80')"></div>
+                        <div class="rest-details">
+                            <h4>Burger Town</h4>
+                            <p>Burgers • 1.5 km • ⭐ 4.3</p>
+                            <span class="badge orange">$5 off orders over $20</span>
+                        </div>
+                    </div>
+                    <div class="restaurant-card dynamic-deal-card" data-restaurant="Thai Delight">
+                        <div class="img-frame" style="background-image: url('https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=400&q=80')"></div>
+                        <div class="rest-details">
+                            <h4>Thai Delight</h4>
+                            <p>Asian • 1.7 km • ⭐ 4.5</p>
+                            <span class="badge green">10% off dine-in</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem;">Local Gems</h3>
+                <div class="local-gems-row">
+                    <div class="gem-strip-card gem-action-trigger" data-gem="The Green Spot">
+                        <div class="gem-thumb" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=200&q=80')"></div>
+                        <div>
+                            <h4>The Green Spot</h4>
+                            <p>Fresh, healthy and delicious salads!</p>
+                        </div>
+                    </div>
+                    <div class="gem-strip-card gem-action-trigger" data-gem="Brew & Co.">
+                        <div class="gem-thumb" style="background-image: url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=200&q=80')"></div>
+                        <div>
+                            <h4>Brew & Co.</h4>
+                            <p>Great coffee and relaxed vibes.</p>
+                        </div>
+                    </div>
+                    <div class="gem-strip-card gem-action-trigger" data-gem="Taco Fiesta">
+                        <div class="gem-thumb" style="background-image: url('https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=200&q=80')"></div>
+                        <div>
+                            <h4>Taco Fiesta</h4>
+                            <p>Authentic tacos and more!</p>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <section id="view-planner" class="view-panel">
-                <div class="view-header-row">
+            <section id="view-planner" class="page-view">
+                <div class="title-block-row">
                     <div>
-                        <h2>Intelligent Meal Planner</h2>
-                        <p>Track macronutrients, calories, and kilojoules directly alongside budget limits.</p>
+                        <h2>Meal Planner</h2>
+                        <p>Plan your meals. Eat healthy. Save money.</p>
                     </div>
-                    <div class="date-selector-pill">
-                        <button class="arrow-btn">◀</button>
-                        <span>12 – 18 May</span>
-                        <button class="arrow-btn">▶</button>
-                    </div>
+                    <button class="action-btn" id="btn-add-meal-prompt">+ Add Custom Meal</button>
                 </div>
 
-                <div class="planner-grid">
-                    <div class="planner-days card">
-                        <div class="day-row"><span>Mon</span><strong>Spaghetti Bolognese</strong><span class="badge-energy">520 kcal</span></div>
-                        <div class="day-row"><span>Tue</span><strong>Grilled Chicken Salad</strong><span class="badge-energy">420 kcal</span></div>
-                        <div class="day-row"><span>Wed</span><strong>Stir Fry Vegetables</strong><span class="badge-energy">410 kcal</span></div>
-                        <div class="day-row"><span>Thu</span><strong>Salmon with Rice</strong><span class="badge-energy">550 kcal</span></div>
-                        <div class="day-row"><span>Fri</span><strong>Vegetable Soup</strong><span class="badge-energy">320 kcal</span></div>
-                        <div class="day-row"><span>Sat</span><strong>Chicken Tacos</strong><span class="badge-energy">480 kcal</span></div>
-                        <div class="day-row"><span>Sun</span><strong>Avocado Toast</strong><span class="badge-energy">310 kcal</span></div>
-                    </div>
+                <div class="weekly-calendar-strip" id="calendar-days-mount"></div>
 
-                    <div class="planner-summary card">
-                        <h3>Nutritional Analytics</h3>
-                        <div class="metric-block">
-                            <span class="metric-label">Weekly Energy Outlay</span>
-                            <h2 class="metric-val text-green">3,010 <small>kcal</small></h2>
-                        </div>
-                        <div class="metric-block" style="margin-top:1.5rem;">
-                            <span class="metric-label">Discretionary Spending Ratio</span>
-                            <h2 class="metric-val text-orange">12% <small>Safe Target Limit</small></h2>
-                        </div>
-                        <button class="btn btn-primary w-100" style="margin-top: 2rem;" onclick="generateAiShoppingList()">Generate Shopping List from Plan</button>
-                    </div>
+                <div class="planner-summary-footer">
+                    <div class="summary-tile"><h5>Weekly Summary</h5></div>
+                    <div class="summary-tile"><p>Total Calories</p><strong>4,879 cal</strong></div>
+                    <div class="summary-tile"><p>Avg. per day</p><strong>696 cal</strong></div>
+                    <div class="summary-tile"><p>Meals Planned</p><strong id="planner-meals-count">21 meals</strong></div>
+                    <button class="action-btn success-btn" id="btn-auto-generate-list">🛒 Auto-generate shopping list</button>
                 </div>
             </section>
 
-            <section id="view-profile" class="view-panel">
-                <div class="profile-layout">
-                    <div class="profile-sidebar card">
-                        <div class="profile-header-main">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Avatar User" class="profile-large-avatar">
-                            <h2 id="settings-name-header">Emma Johnson</h2>
-                            <p id="settings-email-header">emma.j@gmail.com</p>
+            <section id="view-tracker" class="page-view">
+                <div class="title-block-row">
+                    <div>
+                        <h2>Budget Tracker</h2>
+                        <p>Track your spending and save more</p>
+                    </div>
+                    <button class="action-btn red-btn" id="btn-reset-tracker">Reset Ledger</button>
+                </div>
+
+                <div class="tracker-dashboard-grid">
+                    <div class="card-box card-flex-center">
+                        <h4>Spending Overview</h4>
+                        <div class="huge-amount" id="tracker-spend-val">$326.80</div>
+                        <p class="text-muted" id="tracker-budget-text">of $500 budget used</p>
+                        <div class="progress-track big-track"><div class="progress-fill green" id="tracker-progress-bar" style="width: 65%"></div></div>
+                        
+                        <div class="mock-chart-container">
+                            <div class="bar" style="height: 40%"><span>W1</span></div>
+                            <div class="bar" style="height: 65%"><span>W2</span></div>
+                            <div class="bar" style="height: 85%"><span>W3</span></div>
+                            <div class="bar" style="height: 50%"><span>W4</span></div>
                         </div>
-                        <ul class="settings-nav">
-                            <li class="active">👤 Personal Information</li>
-                            <li>👪 Family & Parental Controls</li>
-                            <li>💳 Payment Methods</li>
+                    </div>
+
+                    <div class="card-box">
+                        <h4>Category Breakdown</h4>
+                        <ul class="breakdown-list">
+                            <li><span>Groceries (48%)</span><div class="track-mini"><div class="fill green" style="width: 48%"></div></div></li>
+                            <li><span>Dining Out (24%)</span><div class="track-mini"><div class="fill blue" style="width: 24%"></div></div></li>
+                            <li><span>Transport (14%)</span><div class="track-mini"><div class="fill orange" style="width: 14%"></div></div></li>
+                            <li><span>Entertainment (9%)</span><div class="track-mini"><div class="fill red" style="width: 9%"></div></div></li>
+                            <li><span>Others (5%)</span><div class="track-mini"><div class="fill gray" style="width: 5%"></div></div></li>
                         </ul>
                     </div>
 
-                    <div class="profile-main-settings card">
-                        <h3>App System Configurations</h3>
-                        <hr class="separator">
-                        <div class="config-row">
-                            <div class="config-text">
-                                <strong>Smart Push Alerts</strong>
-                                <p>Receive immediate alerts matching grocery price variance triggers.</p>
-                            </div>
-                            <label class="toggle-switch"><input type="checkbox" id="toggle-notifications" checked> <span class="slider"></span></label>
-                        </div>
-                        
-                        <div class="config-row">
-                            <div class="config-text">
-                                <strong>Location Tracker Services</strong>
-                                <p>Enable real-time detection of nearby retail deals matching your position perimeter.</p>
-                            </div>
-                            <label class="toggle-switch"><input type="checkbox" id="toggle-location" checked> <span class="slider"></span></label>
-                        </div>
+                    <div class="card-box" style="grid-column: span 2;">
+                        <h4>Recent Transactions</h4>
+                        <ul class="transaction-list" id="transaction-mount"></ul>
+                    </div>
+                </div>
+            </section>
 
-                        <div class="config-row">
-                            <div class="config-text">
-                                <strong>Offline Shopping List Cache</strong>
-                                <p>Saves compilation instances directly onto local operational space.</p>
-                            </div>
-                            <label class="toggle-switch"><input type="checkbox" id="toggle-offline"> <span class="slider"></span></label>
-                        </div>
+            <section id="view-reviews" class="page-view">
+                <div class="title-block-row">
+                    <div>
+                        <h2>Reviews</h2>
+                        <p>Read and share reviews</p>
+                    </div>
+                    <button class="action-btn" id="btn-write-review">Write a Review</button>
+                </div>
 
-                        <div class="form-grid-settings" style="margin-top: 2rem;">
-                            <div class="form-element">
-                                <label>Base System Currency</label>
-                                <select id="config-currency">
-                                    <option value="AUD">AUD ($)</option>
-                                    <option value="USD">USD ($)</option>
-                                    <option value="EUR">EUR (€)</option>
-                                </select>
-                            </div>
-                            <div class="form-element">
-                                <label>Visual Application Theme</label>
-                                <select id="config-theme" disabled>
-                                    <option value="light">Light Theme (Strict Corporate Style)</option>
-                                </select>
-                            </div>
+                <div class="card-box hidden" id="review-form-block" style="margin-bottom: 2rem;">
+                    <h3>Submit Platform or Venue Feedback</h3>
+                    <form id="form-submit-review" style="margin-top: 1rem;">
+                        <div class="input-group">
+                            <label>Title / Place Name</label>
+                            <input type="text" id="rev-input-title" placeholder="e.g., Aldi Supermarket or SaveSphere App" required>
                         </div>
+                        <div class="input-group">
+                            <label>Rating</label>
+                            <select id="rev-input-rating">
+                                <option value="⭐⭐⭐⭐⭐ 5.0">5 Stars (Excellent)</option>
+                                <option value="⭐⭐⭐⭐ 4.0">4 Stars (Good)</option>
+                                <option value="⭐⭐⭐ 3.0">3 Stars (Average)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Comments</label>
+                            <textarea id="rev-input-text" style="padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border);" rows="3" placeholder="Share your experience..." required></textarea>
+                        </div>
+                        <button type="submit" class="action-btn">Publish Review</button>
+                    </form>
+                </div>
 
-                        <div class="danger-zone" style="margin-top: 3rem;">
-                            <h4>Account Management actions</h4>
-                            <div class="btn-group-row" style="margin-top: 1rem;">
-                                <button class="btn btn-outline" onclick="resetWizard()">Re-run Setup Wizard</button>
-                                <button class="btn btn-danger-link" onclick="triggerSignOut()">Log Out</button>
-                            </div>
+                <div class="reviews-deck" id="reviews-deck-mount"></div>
+            </section>
+
+            <section id="view-profile" class="page-view">
+                <div class="profile-card card-box">
+                    <div class="profile-main-meta">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Avatar User" class="large-avatar" id="profile-main-avatar">
+                        <h2 id="prof-name">Emma Johnson</h2>
+                        <p id="prof-email" class="text-muted">emma.j@gmail.com</p>
+                        <button class="action-btn outline-btn" id="btn-profile-edit" style="margin-top: 1rem;">Edit Profile</button>
+                    </div>
+
+                    <div class="profile-details-grid">
+                        <div class="details-section">
+                            <h4>Account Overview</h4>
+                            <ul class="details-list">
+                                <li class="prof-action-item" data-action="personal"><span>👤 Personal Information</span> <span>❯</span></li>
+                                <li class="prof-action-item" data-action="family"><span>👪 Family Account</span> <span class="badge-inline" id="prof-badge-family">3 members</span></li>
+                                <li class="prof-action-item" data-action="payment"><span>💳 Payment Methods</span> <span class="badge-inline" id="prof-badge-cards">2 cards saved</span></li>
+                                <li class="prof-action-item" data-action="notifications"><span>🔔 Notification Preferences</span> <span>❯</span></li>
+                            </ul>
+                        </div>
+                        <div class="details-section shadow-accent-box">
+                            <h4>Quick Stats</h4>
+                            <div class="quick-stat-line"><p>Money Saved</p><strong>$156.30</strong></div>
+                            <div class="quick-stat-line"><p>Meals Planned</p><strong id="prof-stat-meals">21</strong></div>
+                            <div class="quick-stat-line"><p>Ledger Entries</p><strong id="prof-stat-ledger">3</strong></div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <section id="view-settings" class="page-view">
+                <div class="card-box settings-container">
+                    <h2>Settings</h2>
+                    <p class="text-muted">Customize your experience</p>
+                    <hr class="divider">
+
+                    <div class="setting-group">
+                        <label>Currency</label>
+                        <select id="set-currency">
+                            <option value="AUD">AUD (Australian Dollar)</option>
+                            <option value="USD">USD (US Dollar)</option>
+                            <option value="EUR">EUR (Euro)</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Default Store</label>
+                        <select id="set-store">
+                            <option value="aldi">Aldi</option>
+                            <option value="woolworths">Woolworths</option>
+                            <option value="coles">Coles</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-toggle-row">
+                        <div>
+                            <strong>Show out of stock items</strong>
+                            <p class="text-muted">Include unavailable items in search lists.</p>
+                        </div>
+                        <label class="switch-node"><input type="checkbox" id="toggle-stock"> <span class="blob"></span></label>
+                    </div>
+
+                    <div class="setting-toggle-row">
+                        <div>
+                            <strong>Dark mode</strong>
+                            <p class="text-muted">Switch application view parameters to high contrast.</p>
+                        </div>
+                        <label class="switch-node"><input type="checkbox" id="dark-theme-toggle"> <span class="blob"></span></label>
+                    </div>
+                </div>
+            </section>
         </main>
-
-        <footer class="bottom-nav-bar">
-            <button class="tab-item active" id="tab-home" onclick="switchView('home')">
-                <span class="tab-icon">🏠</span><span class="tab-label">Home</span>
-            </button>
-            <button class="tab-item" id="tab-groceries" onclick="switchView('groceries')">
-                <span class="tab-icon">🛒</span><span class="tab-label">Groceries</span>
-            </button>
-            <button class="tab-item" id="tab-dining" onclick="switchView('dining')">
-                <span class="tab-icon">🍔</span><span class="tab-label">Dining</span>
-            </button>
-            <button class="tab-item" id="tab-planner" onclick="switchView('planner')">
-                <span class="tab-icon">📅</span><span class="tab-label">Planner</span>
-            </button>
-            <button class="tab-item" id="tab-profile" onclick="switchView('profile')">
-                <span class="tab-icon">👤</span><span class="tab-label">Profile</span>
-            </button>
-        </footer>
-
     </div>
 
-    <div id="toast-notification" class="toast-container"></div>
+    <div id="toast-wrapper" class="toast-popup"></div>
 
     <script src="script.js"></script>
 </body>
