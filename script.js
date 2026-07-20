@@ -1,13 +1,19 @@
-// --- DATA MANAGEMENT CORE ENGINE ---
+// --- CENTRAL ENVIRONMENT REGISTRY DATA POOL ---
 const SaveSphereDB = {
     shoppingList: [
-        { name: "Organic Bananas (1kg)", price: 3.20 },
-        { name: "Free Range Chicken Breast (1kg)", price: 9.50 },
-        { name: "Full Cream Milk (2L)", price: 2.18 },
-        { name: "Wholemeal White Bread (700g)", price: 1.60 },
-        { name: "Large Eggs (12 pack)", price: 4.80 }
+        { name: "Organic Bananas (1kg)", price: 3.20, category: "Produce" },
+        { name: "Free Range Chicken Breast (1kg)", price: 9.50, category: "Meat" },
+        { name: "Full Cream Milk (2L)", price: 2.18, category: "Dairy" },
+        { name: "Wholemeal White Bread (700g)", price: 1.60, category: "Bakery" },
+        { name: "Large Eggs (12 pack)", price: 4.80, category: "Dairy" }
     ],
     itemsStock: ["Organic Bananas (1kg)", "Free Range Chicken Breast (1kg)", "Full Cream Milk (2L)", "Wholemeal White Bread (700g)", "Large Eggs (12 pack)", "Greek Yogurt 1kg", "Avocado Hass Basket"],
+    restaurants: [
+        { name: "Pizza Palace", type: "Italian", dist: "0.8 km", rating: "4.6", discount: "20% off orders over $25", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" },
+        { name: "Sushi Hub", type: "Japanese", dist: "1.2 km", rating: "4.7", discount: "15% off all sushi rolls", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=400&q=80" },
+        { name: "Burger Town", type: "Burgers", dist: "1.5 km", rating: "4.3", discount: "$5 off orders over $20", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80" },
+        { name: "Thai Delight", type: "Asian", dist: "1.7 km", rating: "4.5", discount: "10% off all dine-in arrays", image: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=400&q=80" }
+    ],
     transactions: [
         { entity: "Woolworths Metro", amount: "-$54.20", date: "Jul 18", category: "Groceries" },
         { entity: "Pizza Palace Dine", amount: "-$33.50", date: "Jul 16", category: "Dining Out" },
@@ -16,6 +22,11 @@ const SaveSphereDB = {
     reviews: [
         { title: "Pizza Palace Venue Discount", rating: "⭐⭐⭐⭐⭐ 5.0", text: "Great family size pizzas and stellar price reduction matching using our dashboard coupon tier structure.", source: "Dine Out Log" },
         { title: "SaveSphere Automated Generator", rating: "⭐⭐⭐⭐ 4.0", text: "Generating grocery matrix checklists instantly from the meal calendar saved me almost $45 this layout pass.", source: "User Verification Platform" }
+    ],
+    notifications: [
+        { id: 1, title: "Price Drop Alert", body: "Organic Bananas dropped 12% at ALDI.", time: "10m ago", unread: true },
+        { id: 2, title: "Voucher Confirmed", body: "Pizza Palace coupon successfully generated.", time: "2h ago", unread: true },
+        { id: 3, title: "Budget Balance Warning", body: "You have reached 64% of your monthly safety threshold.", time: "1d ago", unread: false }
     ],
     meals: {
         Mon: ["Oatmeal & Berries", "Chicken Salad Wrap", "Grilled Salmon & Asparagus"],
@@ -30,24 +41,84 @@ const SaveSphereDB = {
 
 // --- CORE NAVIGATION UTILITIES ---
 function navigateTo(viewId) {
-    // Switch Active View Card Elements
     document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
     const targetView = document.getElementById(`view-${viewId}`);
     if (targetView) targetView.classList.add('active');
 
-    // Sync Sidebar Active Button State Indicators
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
     const activeBtn = document.getElementById(`btn-nav-${viewId}`);
     if (activeBtn) activeBtn.classList.add('active');
 }
 
-// --- RENDERING SUBSYSTEM COMPONENTS ---
+// --- GLOBAL FUZZY RUNTIME ENGINE SEARCH (REWORKED MULTI-VIEW FILTER) ---
+function executeGlobalSearch(query) {
+    const cleanQuery = query.toLowerCase().trim();
+    if (!cleanQuery) {
+        renderPriceMatrix();
+        renderDiningCards();
+        document.getElementById('search-count-badge').innerText = "Clear View";
+        return;
+    }
+
+    // 1. Filter Grocery Inventory Matrix array references
+    const matchedStock = SaveSphereDB.itemsStock.filter(item => item.toLowerCase().includes(cleanQuery));
+    const matrixMount = document.getElementById('price-matrix-mount');
+    
+    if (matchedStock.length === 0) {
+        matrixMount.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No matching stock inventory records found.</td></tr>`;
+    } else {
+        matrixMount.innerHTML = matchedStock.map(item => {
+            let base = 4.50;
+            let pColes = base + (item.length % 3) * 1.2;
+            let pWoolies = pColes * 0.95;
+            let pAldi = pColes * 0.82;
+            let pIga = pColes * 1.15;
+            return `
+                <tr>
+                    <td style="font-weight:700;">${item}</td>
+                    <td>$${pColes.toFixed(2)}</td>
+                    <td>$${pWoolies.toFixed(2)}</td>
+                    <td class="best-cell">$${pAldi.toFixed(2)} ★</td>
+                    <td>$${pIga.toFixed(2)}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 2. Filter Dining Cards array targets
+    const matchedDining = SaveSphereDB.restaurants.filter(r => 
+        r.name.toLowerCase().includes(cleanQuery) || r.type.toLowerCase().includes(cleanQuery)
+    );
+    const diningMount = document.getElementById('dining-deals-card-mount');
+    
+    if (matchedDining.length === 0) {
+        diningMount.innerHTML = `<p class="text-muted" style="grid-column: span 4; text-align:center; padding:3rem 0;">No restaurant channels matched query parameters.</p>`;
+    } else {
+        diningMount.innerHTML = matchedDining.map(r => `
+            <div class="restaurant-card dynamic-deal-card" data-restaurant="${r.name}">
+                <div class="img-frame" style="background-image: url('${r.image}')"></div>
+                <div class="rest-details">
+                    <h4>${r.name}</h4>
+                    <p>${r.type} • ${r.dist} • ⭐ ${r.rating}</p>
+                    <span class="badge green">${r.discount}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Provide contextual navigation update flags
+    const matchCount = matchedStock.length + matchedDining.length;
+    document.getElementById('search-count-badge').innerText = `${matchCount} Dynamic Matches`;
+    showToast(`Filtered database registers: Found ${matchCount} matches`);
+}
+
+// --- RENDERING REGISTER SYSTEM SUB-UNITS ---
 function renderShoppingList() {
     const mount = document.getElementById('shopping-list-mount');
     let totalCost = 0;
     
     if (SaveSphereDB.shoppingList.length === 0) {
-        mount.innerHTML = `<p class="text-muted" style="text-align:center; padding: 2rem 0;">Your shopping list is empty.</p>`;
+        mount.innerHTML = `<p class="text-muted" style="text-align:center; padding: 3rem 0;">Your active catalog list remains blank.</p>`;
         document.getElementById('grocery-total-cost').innerText = "$0.00";
         return;
     }
@@ -58,7 +129,7 @@ function renderShoppingList() {
             <div class="item-entry">
                 <span>${item.name}</span>
                 <div>
-                    <span style="color:var(--text-muted); margin-right:12px;">$${item.price.toFixed(2)}</span>
+                    <span style="color:var(--text-muted); margin-right:16px;">$${item.price.toFixed(2)}</span>
                     <button class="del-node" data-index="${index}">×</button>
                 </div>
             </div>
@@ -67,13 +138,12 @@ function renderShoppingList() {
     
     document.getElementById('grocery-total-cost').innerText = `$${totalCost.toFixed(2)}`;
 
-    // Attach deletion logic click sequences instantly to fresh rendering runs
     mount.querySelectorAll('.del-node').forEach(btn => {
         btn.addEventListener('click', function() {
             const idx = parseInt(this.getAttribute('data-index'));
             SaveSphereDB.shoppingList.splice(idx, 1);
             renderShoppingList();
-            showToast("Item removed from list");
+            showToast("Asset stripped from dynamic total compilation array.");
         });
     });
 }
@@ -98,6 +168,26 @@ function renderPriceMatrix() {
     }).join('');
 }
 
+function renderDiningCards() {
+    const mount = document.getElementById('dining-deals-card-mount');
+    mount.innerHTML = SaveSphereDB.restaurants.map(r => `
+        <div class="restaurant-card dynamic-deal-card" data-restaurant="${r.name}">
+            <div class="img-frame" style="background-image: url('${r.image}')"></div>
+            <div class="rest-details">
+                <h4>${r.name}</h4>
+                <p>${r.type} • ${r.dist} • ⭐ ${r.rating}</p>
+                <span class="badge green">${r.discount}</span>
+            </div>
+        </div>
+    `).join('');
+
+    mount.querySelectorAll('.dynamic-deal-card').forEach(card => {
+        card.addEventListener('click', function() {
+            showToast(`Redeemed coupon key structure for: "${this.getAttribute('data-restaurant')}"`);
+        });
+    });
+}
+
 function renderMealPlanner() {
     const mount = document.getElementById('calendar-days-mount');
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -110,13 +200,13 @@ function renderMealPlanner() {
             <div class="day-column-box">
                 <h4>${day}</h4>
                 ${slots.map(meal => `
-                    <div class="meal-slot">${meal}<span class="kcal-badge">🔥 340 kcal</span></div>
+                    <div class="meal-slot">${meal}<span class="kcal-badge">🔥 340 kcal logged</span></div>
                 `).join('')}
             </div>
         `;
     }).join('');
 
-    document.getElementById('planner-meals-count').innerText = `${totalMeals} meals`;
+    document.getElementById('planner-meals-count').innerText = `${totalMeals} planned dishes`;
     document.getElementById('dash-meals-count').innerText = totalMeals;
     document.getElementById('prof-stat-meals').innerText = totalMeals;
 }
@@ -125,22 +215,61 @@ function renderTransactions() {
     const mount = document.getElementById('transaction-mount');
     mount.innerHTML = SaveSphereDB.transactions.map(t => `
         <li class="transaction-item">
-            <div><span>${t.entity}</span><p>${t.date} • ${t.category}</p></div>
-            <strong style="font-variant-numeric: tabular-nums;">${t.amount}</strong>
+            <div><span>${t.entity}</span><p style="font-size:0.8rem; color:var(--text-muted);">${t.date} • Verification Channel [${t.category}]</p></div>
+            <strong style="font-variant-numeric: tabular-nums; color: var(--accent-red);">${t.amount}</strong>
         </li>
     `).join('');
-    document.getElementById('prof-stat-ledger').innerText = SaveSphereDB.transactions.length;
+    document.getElementById('prof-stat-ledger').innerText = `${SaveSphereDB.transactions.length} Active`;
 }
 
 function renderReviewsDeck() {
     const mount = document.getElementById('reviews-deck-mount');
     mount.innerHTML = SaveSphereDB.reviews.map(r => `
         <div class="review-node-card">
-            <div class="review-top-meta"><h4>${r.title}</h4><span class="stars-badge">${r.rating}</span></div>
+            <div class="review-top-meta"><h4>${r.title}</h4><span class="badge orange">${r.rating}</span></div>
             <p>"${r.text}"</p>
-            <span class="review-source-tag">Verified Flow Pipeline • ${r.source}</span>
+            <span class="review-source-tag">Verified Log Pathway • ${r.source}</span>
         </div>
     `).join('');
+    document.getElementById('review-total-count-label').innerText = `${SaveSphereDB.reviews.length} Logs`;
+}
+
+function renderNotificationTray() {
+    const mount = document.getElementById('noti-list-mount');
+    const unreadCount = SaveSphereDB.notifications.filter(n => n.unread).length;
+    
+    const counterBadge = document.getElementById('noti-counter-badge');
+    if (unreadCount === 0) {
+        counterBadge.classList.add('hidden');
+    } else {
+        counterBadge.classList.remove('hidden');
+        counterBadge.innerText = unreadCount;
+    }
+
+    if (SaveSphereDB.notifications.length === 0) {
+        mount.innerHTML = `<p class="text-muted" style="text-align:center; padding:2rem 0; font-size:0.85rem;">No notifications recorded.</p>`;
+        return;
+    }
+
+    mount.innerHTML = SaveSphereDB.notifications.map(n => `
+        <div class="noti-item ${n.unread ? 'unread' : ''}" data-id="${n.id}">
+            <h5>${n.title}</h5>
+            <p>${n.body}</p>
+            <span class="time-stamp">${n.time}</span>
+        </div>
+    `).join('');
+
+    mount.querySelectorAll('.noti-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const targetedId = parseInt(this.getAttribute('data-id'));
+            const match = SaveSphereDB.notifications.find(n => n.id === targetedId);
+            if (match && match.unread) {
+                match.unread = false;
+                renderNotificationTray();
+                showToast(`Marked alert "${match.title}" checked.`);
+            }
+        });
+    });
 }
 
 function showToast(msg) {
@@ -150,23 +279,46 @@ function showToast(msg) {
     setTimeout(() => wrapper.classList.remove('show'), 3000);
 }
 
-// --- EVENT ROUTING & DOM EVENT REGISTER HOOKS ---
+// --- SYSTEM BINDINGS & CONTEXT TRIGGER HOOKS ---
 document.addEventListener("DOMContentLoaded", () => {
     
-    // Initialize Platform Layout Framework Views
+    // Core Layout Boot Pipeline Initialization
     renderShoppingList();
     renderPriceMatrix();
+    renderDiningCards();
     renderMealPlanner();
     renderTransactions();
     renderReviewsDeck();
+    renderNotificationTray();
 
-    // 1. SIDEBAR ROUTING HANDLERS
+    // 1. GLOBAL INSTANT INTERACTIVE TOP BAR CONTROLS
+    document.getElementById('global-search').addEventListener('input', function() {
+        executeGlobalSearch(this.value);
+    });
+
+    document.getElementById('btn-bell').addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('noti-dropdown-tray').classList.toggle('hidden');
+    });
+
+    document.getElementById('btn-clear-notifications').addEventListener('click', (e) => {
+        e.stopPropagation();
+        SaveSphereDB.notifications = [];
+        renderNotificationTray();
+        showToast("Notification dynamic storage vectors cleared completely.");
+    });
+
+    document.addEventListener('click', () => {
+        document.getElementById('noti-dropdown-tray').classList.add('hidden');
+    });
+
+    // 2. SIDEBAR RUNTIME ENVIRONMENT SWITCH CHANNELS
     const navMapping = ['dashboard', 'groceries', 'dining', 'planner', 'tracker', 'reviews', 'profile', 'settings'];
     navMapping.forEach(view => {
         document.getElementById(`btn-nav-${view}`).addEventListener('click', () => navigateTo(view));
     });
 
-    // 2. ENTRY GATE SECURITY AUTHORIZATION TRIGGERS
+    // 3. SECURE AUTH PATHWAY LOGIC INTERFACES
     document.getElementById('to-register-view').addEventListener('click', () => {
         document.getElementById('auth-card-login').classList.add('hidden');
         document.getElementById('auth-card-register').classList.remove('hidden');
@@ -177,173 +329,113 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('auth-card-login').classList.remove('hidden');
     });
 
-    // Handle standard user credentials form dispatch sequences
     document.getElementById('form-login').addEventListener('submit', (e) => {
         e.preventDefault();
         const userEmail = document.getElementById('login-email').value;
-        
         document.getElementById('dashboard-welcome-banner').innerText = "Welcome back, Emma! 👋";
         document.getElementById('prof-name').innerText = "Emma Johnson";
         document.getElementById('prof-email').innerText = userEmail;
-        document.getElementById('global-header-avatar').src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80";
-        document.getElementById('profile-main-avatar').src = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80";
-        document.getElementById('prof-badge-family').innerText = "3 members";
-        document.getElementById('prof-badge-cards').innerText = "2 cards saved";
         
         document.getElementById('auth-gate-canvas').classList.remove('active');
         document.getElementById('app-workspace-shell').classList.remove('app-locked');
-        showToast("Access token authenticated successfully.");
+        showToast("Access Token validated across authorization lines.");
         navigateTo('dashboard');
     });
 
-    // Handle new account registration dispatches
-    document.getElementById('form-register').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const newName = document.getElementById('reg-name').value;
-        const newEmail = document.getElementById('reg-email').value;
-        
-        document.getElementById('dashboard-welcome-banner').innerText = `Welcome to SaveSphere, ${newName}! 🎉`;
-        document.getElementById('prof-name').innerText = newName;
-        document.getElementById('prof-email').innerText = newEmail;
-        document.getElementById('global-header-avatar').src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80";
-        document.getElementById('profile-main-avatar').src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80";
-        document.getElementById('prof-badge-family').innerText = "0 members";
-        document.getElementById('prof-badge-cards').innerText = "No cards linked";
-
-        document.getElementById('auth-gate-canvas').classList.remove('active');
-        document.getElementById('app-workspace-shell').classList.remove('app-locked');
-        showToast("Account created successfully!");
-        navigateTo('dashboard');
-    });
-
-    // Guest Account entry bypass mechanism
     document.getElementById('btn-guest-login').addEventListener('click', () => {
-        document.getElementById('dashboard-welcome-banner').innerText = "Welcome Explorer (Guest Mode) 🕶️";
+        document.getElementById('dashboard-welcome-banner').innerText = "Welcome Explorer (Guest Session Mode) 🕶️";
         document.getElementById('prof-name').innerText = "Anonymous Explorer Mode";
         document.getElementById('prof-email').innerText = "guest@savesphere.local";
-        document.getElementById('global-header-avatar').src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80";
-        document.getElementById('profile-main-avatar').src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80";
-        document.getElementById('prof-badge-family').innerText = "0 members";
-        document.getElementById('prof-badge-cards').innerText = "No cards linked";
-
+        
         document.getElementById('auth-gate-canvas').classList.remove('active');
         document.getElementById('app-workspace-shell').classList.remove('app-locked');
-        showToast("Bypassed layout gate to guest shell.");
+        showToast("Bypassed credential checking gateway.");
         navigateTo('dashboard');
     });
 
-    // OAuth simulated endpoints
-    document.getElementById('btn-oauth-google').addEventListener('click', () => showToast("Google authentication endpoint loaded."));
-    document.getElementById('btn-oauth-apple').addEventListener('click', () => showToast("Apple secure account handshake loaded."));
-    document.getElementById('btn-forgot-pass').addEventListener('click', () => showToast("Password reset link dispatched to input address."));
-
-    // Secure workspace log-out sequence
     document.getElementById('btn-logout').addEventListener('click', () => {
         document.getElementById('app-workspace-shell').classList.add('app-locked');
         document.getElementById('auth-gate-canvas').classList.add('active');
-        showToast("Session discarded. Workspace re-locked.");
+        showToast("Session security variables dropped. Canvas locked.");
     });
 
-    // 3. HEADER PLATFORM INTERFACE INTERACTION KEYS
-    document.getElementById('btn-bell').addEventListener('click', () => showToast("No new savings notifications right now. Everything is optimized!"));
-    document.getElementById('btn-header-profile').addEventListener('click', () => navigateTo('profile'));
-    
-    // Global fuzzy matching layout logic
-    document.getElementById('global-search').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            showToast(`Searching across systems for query parameters: "${this.value}"`);
-            this.value = '';
-        }
-    });
-
-    // 4. QUICK ACTIONS & DASHBOARD ACTION DISPATCH LINKS
+    // 4. QUICK ROUTING DASHBOARD ANCHOR HOOKS
     document.getElementById('qa-shopping-list').addEventListener('click', () => navigateTo('groceries'));
     document.getElementById('qa-meal-planner').addEventListener('click', () => navigateTo('planner'));
     document.getElementById('qa-budget-tracker').addEventListener('click', () => navigateTo('tracker'));
     document.getElementById('qa-local-gems').addEventListener('click', () => navigateTo('dining'));
     document.getElementById('btn-dash-see-all-deals').addEventListener('click', () => navigateTo('dining'));
+    document.getElementById('btn-header-profile').addEventListener('click', () => navigateTo('profile'));
 
     document.querySelectorAll('.deal-trigger-btn').forEach(card => {
         card.addEventListener('click', function() {
-            const store = this.getAttribute('data-store');
-            showToast(`Copied exclusive target coupon deal code from ${store} straight to checking tray!`);
+            showToast(`Copied exclusive target coupon deal code from ${this.getAttribute('data-store')} directly to system clipboard!`);
         });
     });
 
-    // 5. GROCERY MATRIX USER DISPATCH FORM
+    // 5. SHOPPING MATRIX FORM ADDITIONS
     document.getElementById('form-add-grocery-item').addEventListener('submit', (e) => {
         e.preventDefault();
         const targetNode = document.getElementById('list-input-node');
         const itemName = targetNode.value.trim();
         
         if (itemName) {
-            const simulatedCost = parseFloat((Math.random() * 8 + 1.25).toFixed(2));
+            const simulatedCost = parseFloat((Math.random() * 8 + 1.50).toFixed(2));
             SaveSphereDB.shoppingList.push({ name: itemName, price: simulatedCost });
             renderShoppingList();
-            showToast(`Added: ${itemName} to checklist`);
+            showToast(`Inserted "${itemName}" entry into layout metrics.`);
             targetNode.value = '';
         }
     });
 
-    // Chip active toggle matrix selector loops
     document.getElementById('store-filter-container').querySelectorAll('.chip').forEach(chip => {
         chip.addEventListener('click', function() {
             document.getElementById('store-filter-container').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
             this.classList.add('active');
-            showToast(`Filtered comparison lists for target store: [${this.innerText.toUpperCase()}]`);
+            showToast(`Filtered comparison calculations down to parameters matching: [${this.innerText.toUpperCase()}]`);
         });
     });
 
-    // 6. DINING TARGET TILES EVENT CLICKS
-    document.querySelectorAll('.dynamic-deal-card').forEach(card => {
-        card.addEventListener('click', function() {
-            showToast(`Activated voucher mapping array validation check for venue: "${this.getAttribute('data-restaurant')}"`);
-        });
-    });
-
-    document.querySelectorAll('.gem-action-trigger').forEach(card => {
-        card.addEventListener('click', function() {
-            showToast(`Loading community directions and menu index options for local treasure: "${this.getAttribute('data-gem')}"`);
-        });
-    });
-
-    // 7. MEAL PLANNER DISPATCH ACTION CHAINS
+    // 6. MEAL ARRANGEMENT LOGIC TRIPS
     document.getElementById('btn-add-meal-prompt').addEventListener('click', () => {
-        const mealTitle = prompt("Enter meal recipe details to drop into tracking array:");
+        const mealTitle = prompt("Provide item names or recipes description text to map:");
         if (mealTitle) {
-            const targetDay = prompt("Which day element? (Mon, Tue, Wed, Thu, Fri, Sat, Sun):", "Mon");
+            const targetDay = prompt("Identify targeted target day node array (Mon, Tue, Wed, Thu, Fri, Sat, Sun):", "Mon");
             if (SaveSphereDB.meals[targetDay]) {
                 SaveSphereDB.meals[targetDay].push(mealTitle);
                 renderMealPlanner();
-                showToast(`Appended: ${mealTitle} straight to ${targetDay} schedule matrix`);
+                showToast(`Appended recipe match record down to "${targetDay}" calendar rows.`);
             } else {
-                alert("Invalid Day selection index parameter error.");
+                alert("Day indicator argument error mismatch validation.");
             }
         }
     });
 
     document.getElementById('btn-auto-generate-list').addEventListener('click', () => {
         SaveSphereDB.shoppingList.push(
-            { name: "Fresh Salmon Steaks", price: 14.20 },
-            { name: "Avocado Basket", price: 6.00 },
-            { name: "Stir Fry Vegetable Packs", price: 4.50 }
+            { name: "Fresh Salmon Crust Fillets", price: 15.60 },
+            { name: "Avocado Hass Basket", price: 6.50 },
+            { name: "Crisp Green Salad Arrays", price: 4.20 }
         );
         renderShoppingList();
-        showToast("Appended items directly from active calendar recipes grid!");
+        showToast("Synchronized calendar item ingredients list to groceries dashboard metrics!");
         navigateTo('groceries');
     });
 
-    // 8. BUDGET LEDGER SYSTEM CLEAR DISPATCH KEY
+    // 7. TRANSACTION RESET CONTROLS
     document.getElementById('btn-reset-tracker').addEventListener('click', () => {
         SaveSphereDB.transactions = [];
         renderTransactions();
         document.getElementById('tracker-spend-val').innerText = "$0.00";
-        document.getElementById('tracker-budget-text').innerText = "of $500 budget used (Cleared Ledger)";
+        document.getElementById('tracker-budget-text').innerText = "All tracking registers dropped to empty.";
         document.getElementById('tracker-progress-bar').style.width = "0%";
-        showToast("Cleared transaction history logs.");
+        document.getElementById('dash-budget-text').innerText = "$0.00";
+        document.getElementById('dash-budget-progress').style.width = "0%";
+        document.getElementById('dash-budget-percentage').innerText = "0% Expended";
+        showToast("Historical tracking indexes cleared successfully.");
     });
 
-    // 9. REVIEWS WRITE TRIGGER PANEL DROPDOWNS
+    // 8. COMMUNITY SATISFACTION REVIEW REGISTRY DISPATCHERS
     document.getElementById('btn-write-review').addEventListener('click', () => {
         document.getElementById('review-form-block').classList.toggle('hidden');
     });
@@ -354,50 +446,48 @@ document.addEventListener("DOMContentLoaded", () => {
         const r = document.getElementById('rev-input-rating').value;
         const txt = document.getElementById('rev-input-text').value;
 
-        SaveSphereDB.reviews.unshift({ title: t, rating: r, text: txt, source: "Direct Input" });
+        SaveSphereDB.reviews.unshift({ title: t, rating: r, text: txt, source: "Direct Entry Grid" });
         renderReviewsDeck();
         
-        // Reset and tuck back away smoothly
         document.getElementById('form-submit-review').reset();
         document.getElementById('review-form-block').classList.add('hidden');
-        showToast("Review dispatched to workspace grid display logs.");
+        showToast("Review published directly onto public metrics stack!");
     });
 
-    // 10. PROFILE DEEP PANEL SIMULATIONS
-    document.getElementById('btn-profile-edit').addEventListener('click', () => showToast("Modifying demographic configurations locked during active session loops."));
+    // 9. PROFILE & SYSTEM SETTINGS EVENT ATTRIBUTES
+    document.getElementById('btn-profile-edit').addEventListener('click', () => showToast("Profile variables manipulation temporarily locked in standard runtime sandbox environment."));
     document.querySelectorAll('.prof-action-item').forEach(item => {
         item.addEventListener('click', function() {
-            showToast(`Opening sub-profile window settings directory for action: [${this.getAttribute('data-action').toUpperCase()}]`);
+            showToast(`Accessing secure variable storage pipeline data points for: [${this.getAttribute('data-action').toUpperCase()}]`);
         });
     });
 
-    // 11. GLOBAL SETTINGS PARAMETER MANIPULATION HOOKS
     document.getElementById('set-currency').addEventListener('change', function() {
-        showToast(`Base active ledger tracking array value transformed directly to currency node: ${this.value}`);
+        showToast(`Transformed accounting metrics matrix data configurations over into target currency: ${this.value}`);
     });
 
     document.getElementById('set-store').addEventListener('change', function() {
-        showToast(`Preferred target indexing priority matching configured to lookups targeting: ${this.value.toUpperCase()}`);
+        showToast(`Optimized matching algorithmic parameters shifted to target: ${this.value.toUpperCase()}`);
     });
 
     document.getElementById('toggle-stock').addEventListener('change', function() {
-        showToast(`Out of stock search visibility parameter set directly to boolean status: ${this.checked}`);
+        showToast(`Out-of-stock data checking options modified directly to value: ${this.checked}`);
     });
 
-    // High Contrast Theme Switch variable logic updates
+    // WIDESCREEN REAL ESTATE THEME TUNNEL INVERTER
     document.getElementById('dark-theme-toggle').addEventListener('change', function() {
         if(this.checked) {
             document.documentElement.style.setProperty('--bg-workspace', '#0f172a');
             document.documentElement.style.setProperty('--bg-card', '#1e293b');
             document.documentElement.style.setProperty('--text-main', '#f8fafc');
             document.documentElement.style.setProperty('--border', '#334155');
-            showToast("Dark mode parameters active.");
+            showToast("Environment parameters shifted to deep high contrast dark layout values.");
         } else {
-            document.documentElement.style.setProperty('--bg-workspace', '#f4f6f8');
+            document.documentElement.style.setProperty('--bg-workspace', '#f8fafc');
             document.documentElement.style.setProperty('--bg-card', '#ffffff');
-            document.documentElement.style.setProperty('--text-main', '#1e293b');
+            document.documentElement.style.setProperty('--text-main', '#0f172a');
             document.documentElement.style.setProperty('--border', '#e2e8f0');
-            showToast("Light mode design active.");
+            showToast("Light high contrast clean environment theme reactivated.");
         }
     });
 });
